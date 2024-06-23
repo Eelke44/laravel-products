@@ -97,7 +97,7 @@ class ProductController extends Controller
         }
         $success = $this->repository->update($attributes);
         if (!$success) abort(500);
-        return redirect('/products/'.$attributes['id']);
+        return redirect('/products/'.$attributes['id'])->setStatusCode(200);
     }
 
     /**
@@ -108,7 +108,7 @@ class ProductController extends Controller
     {
         $numDeleted = $this->repository->delete($productId);
         if ($numDeleted === 0) abort(500, 'The product could not be removed.');
-        return redirect('/products');
+        return redirect('/products')->setStatusCode(200);
     }
 
     /**

@@ -6,7 +6,7 @@ use App\Http\Controllers\ProductController;
 
 
 // Index
-Route::get('/', fn() => redirect('/products'));
+Route::get('/', fn() => redirect('/products')->setStatusCode(200));
 
 // Auth middleware redirects to route with name 'login' if not authenticated
 Route::middleware(['auth'])->group(function () {
