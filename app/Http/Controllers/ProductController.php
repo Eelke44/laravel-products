@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 use App\Repositories\ProductRepositoryInterface;
 use App\Repositories\EloquentProductRepository;
 use App\Repositories\PlainSqlProductRepository;
@@ -38,10 +40,10 @@ class ProductController extends Controller
         try {
             $attributes = $this->withCorrectTypes($attributes, includeId: false);
         } catch (\TypeError | \InvalidArgumentException $e) {
-            abort(400, $e->getMessage());
+            abort(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
         $success = $this->repository->create($attributes);
-        if (!$success) abort(500);
+        if (!$success) abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         return redirect('/products')->setStatusCode(201);
     }
 
@@ -60,11 +62,13 @@ class ProductController extends Controller
      * Retrieve a product and return a view showing its properties.
      * @param int $productId: the id of the product to be retrieved.
      */
-    public function retrieve(int $productId)
+    public function retrieve($productId)
     {
-        if (!is_int($productId)) abort(400, 'The given product id must be an integer.');
+        if ($productId != (int) $productId) {
+            abort(Response::HTTP_BAD_REQUEST, 'The given product id must be an integer.');
+        }
         $product = $this->repository->retrieveOne($productId);
-        if ($product === null) abort(404);
+        if ($product === null) abort(Response::HTTP_NOT_FOUND);
         return view('product', [
             'product' => $product,
         ]);
@@ -74,10 +78,13 @@ class ProductController extends Controller
      * Show the view where a product can be updated.
      * @param int $productId: the id of the product to be updated.
      */
-    public function showUpdatePage(int $productId)
+    public function showUpdatePage($productId)
     {
+        if ($productId != (int) $productId) {
+            abort(Response::HTTP_BAD_REQUEST, 'The given product id must be an integer.');
+        }
         $product = $this->repository->retrieveOne($productId);
-        if ($product === null) abort(404);
+        if ($product === null) abort(Response::HTTP_NOT_FOUND);
         return view('product-update', [
             'product' => $product,
         ]);
@@ -93,21 +100,25 @@ class ProductController extends Controller
         try {
             $attributes = $this->withCorrectTypes($attributes);
         } catch (\TypeError | \InvalidArgumentException $e) {
-            abort(400, $e->getMessage());
+            abort(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
         $success = $this->repository->update($attributes);
-        if (!$success) abort(500);
-        return redirect('/products/'.$attributes['id'])->setStatusCode(200);
+        // Better: actually check if it was not found or if some other error occurred
+        if (!$success) abort(Response::HTTP_NOT_FOUND);
+        return redirect('/products/'.$attributes['id'])->setStatusCode(Response::HTTP_OK);
     }
 
     /**
      * Delete a product from the db.
      * @param int $productId: the id of the product to be deleted.
      */
-    public function delete(int $productId)
+    public function delete($productId)
     {
+        if ($productId != (int) $productId) {
+            abort(Response::HTTP_BAD_REQUEST, 'The given product id must be an integer.');
+        }
         $numDeleted = $this->repository->delete($productId);
-        if ($numDeleted === 0) abort(500, 'The product could not be removed.');
+        if ($numDeleted == 0) abort(Response::HTTP_NOT_FOUND, 'The product to be removed was not found.');
         return redirect('/products')->setStatusCode(200);
     }
 

@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\Response;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 
 
 // Index
-Route::get('/', fn() => redirect('/products')->setStatusCode(200));
+Route::get('/', fn() => redirect('/products')->setStatusCode(Response::HTTP_OK));
 
 // Auth middleware redirects to route with name 'login' if not authenticated
 Route::middleware(['auth'])->group(function () {
