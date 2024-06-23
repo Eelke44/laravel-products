@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
+use App\ProductValidation\ProductAttributeValidator;
 use App\Repositories\ProductRepositoryInterface;
 use App\Repositories\EloquentProductRepository;
 use App\Repositories\PlainSqlProductRepository;
-use App\Validation\AttributeChecker;
 
 
 class ProductController extends Controller
 {
-    use AttributeChecker;
+    use ProductAttributeValidator;
 
     private ProductRepositoryInterface $repository;
 
@@ -37,11 +38,7 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $attributes = $request->all();
-        try {
-            $attributes = $this->withCorrectTypes($attributes, includeId: false);
-        } catch (\TypeError | \InvalidArgumentException $e) {
-            abort(Response::HTTP_BAD_REQUEST, $e->getMessage());
-        }
+        $this->abortIfInvalid($attributes, includeId: false);
         $success = $this->repository->create($attributes);
         if (!$success) abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         return redirect('/products')->setStatusCode(201);
@@ -97,11 +94,7 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $attributes = $request->all();
-        try {
-            $attributes = $this->withCorrectTypes($attributes);
-        } catch (\TypeError | \InvalidArgumentException $e) {
-            abort(Response::HTTP_BAD_REQUEST, $e->getMessage());
-        }
+        $this->abortIfInvalid($attributes, includeId: true);
         $success = $this->repository->update($attributes);
         // Better: actually check if it was not found or if some other error occurred
         if (!$success) abort(Response::HTTP_NOT_FOUND);
@@ -123,32 +116,16 @@ class ProductController extends Controller
     }
 
     /**
-     * Create an attributes array out of the given one that has the correct types for a product.
-     * @param array<string, mixed> $attributes: the attributes to be converted to the correct types.
-     * @return array<string, mixed>: the attributes with the correct types.
-     * @throws \InvalidArgumentException if any required attributes are missing.
-     * @throws \TypeError if the types cannot be converted.
+     * Abort with a bad request status if the given attributes are invalid for a product.
+     * @param array<string, mixed> $attributes: the attributes to validate.
+     * @param bool $includeId: whether an id should be present in the attributes. Defaults to true.
      */
-    private function withCorrectTypes($attributes, bool $includeId=true)
+    private function abortIfInvalid($attributes, bool $includeId = true)
     {
-        // Handle potentially missing attributes.
-        $requiredAttributes = ['name', 'description', 'price'];
-        if ($includeId) $requiredAttributes[] = 'id';
-        if (!$this->hasAttributes($attributes, $requiredAttributes)) {
-            throw new \InvalidArgumentException('Missing at least one of the required attributes: '.implode(', ', $requiredAttributes).'.');
+        try {
+            $this->validateProductAttributes($attributes, $includeId);
+        } catch (ValidationException $e) {
+            abort(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
-        // Build $result. When PHP does not know how to cast a value, it returns a default.
-        $result = [];
-        $result['name'] = (string) $attributes['name'];
-        $result['description'] = (string) $attributes['description'];
-        $result['price'] = (float) $attributes['price'];
-        if ($includeId) $result['id'] = (int) $attributes['id'];
-        // Check that $result is correct using typeless equality tests.
-        foreach ($requiredAttributes as $attribute) {
-            if ($result[$attribute] != $attributes[$attribute]) {
-                throw new \TypeError('The attribute '.$attribute.' has an unexpected type: '.gettype($attributes[$attribute]).'.');
-            }
-        }
-        return $result;
     }
 }

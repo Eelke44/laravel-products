@@ -129,7 +129,7 @@ class CrudTest extends TestCase
         $this->assertLessThanOrEqual($created_at, $updatedProduct->updated_at);
 
         // Fails
-        $attributes['id'] = -1;
+        $attributes['id'] = $updatedProduct->id + 1;
         $response = $this->authenticated()->put('/products/'.$product->id.'/update', $attributes);
         $response->assertStatus(Response::HTTP_NOT_FOUND);
         $attributes['id'] = "invalid";
