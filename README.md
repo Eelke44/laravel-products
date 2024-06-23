@@ -60,3 +60,19 @@ php artisan serve
 ```
 
 NOTE: if there is no `.env` file at the project root, creating one with the contents of `.env.example` works for local development.
+
+## Testing
+
+Testing requires a testing environment configuration to exist. Creating a `env.testing` file with the contents of `.env.testing.example` works.
+
+To create the testing database, run:
+
+```bash
+php artisan migrate --env=testing
+```
+
+To execute all tests, run:
+
+```bash
+php artisan test
+```
