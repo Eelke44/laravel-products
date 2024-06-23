@@ -20,8 +20,8 @@
     @endif
 
     {{-- Login form. --}}
-    <form id="form-login" class="d-flex flex-col" action="{{ url('login') }}" method="POST">
-        @csrf <!-- {{ csrf_field() }} -->
+    <form id="form-login" action="{{ url('login') }}" method="POST">
+        @csrf {{-- Cross-Site Request Forgery protection. --}}
         <h2>Login</h2>
 
         <input id="input-email" name="email" type="text" placeholder="Email">
