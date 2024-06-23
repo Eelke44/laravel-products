@@ -26,7 +26,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
     /** @inheritDoc */
     public function retrieveAll()
     {
-        return Product::All()->all();
+        return Product::all()->all();
     }
 
     /** @inheritDoc */
@@ -42,5 +42,19 @@ class EloquentProductRepository implements ProductRepositoryInterface
     public function delete(int $productId): int
     {
         return Product::destroy($productId);
+    }
+
+    /**
+     * @inheritDoc
+     * Inefficient due to querying all products, then updating one by one.
+     */
+    public function multiplyAllPricesBy(float $multiplier): bool
+    {
+        $results = [];
+        foreach (Product::all()->all() as $product) {
+            $success = $product->update(['price' => $product->price * $multiplier]);
+            $results[] = $success;
+        }
+        return !in_array(false, $results, true);
     }
 }

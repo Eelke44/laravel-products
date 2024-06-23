@@ -29,7 +29,7 @@ sudo apt-get install php-sqlite3
 
 ### Installing Composer
 
-A dependency manager for PHP. For this project, v2.7.7 was used.
+Composer is dependency manager for PHP. For this project, v2.7.7 was used.
 
 Please find installation instructions [here](https://getcomposer.org/download/).
 
@@ -75,4 +75,12 @@ To execute all tests, run:
 
 ```bash
 php artisan test
+```
+
+## Jobs
+
+The app allows for jobs to be dispatched, but jobs are only processed if a queue worker is running. To start a queue worker for the products queue (used for processing global discounts), run:
+
+```bash
+php artisan queue:work --queue=products
 ```

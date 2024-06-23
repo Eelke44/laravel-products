@@ -26,6 +26,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Delete
     Route::delete('/products/{id}', [ProductController::class, 'delete']);
+
+    // Discount job
+    Route::post('/products/discount', [ProductController::class, 'dispatchGlobalDiscount']);
 });
 
 // Login

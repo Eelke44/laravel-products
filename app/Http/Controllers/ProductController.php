@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DiscountAll;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ class ProductController extends Controller
     private ProductRepositoryInterface $repository;
 
     /**
-     * Create a new controller instance. The repository is injected by Laravel.
+     * Create a new controller instance. The repository is injected by Laravel's service container.
      */
     public function __construct(PlainSqlProductRepository $repository)
     {
@@ -33,7 +34,7 @@ class ProductController extends Controller
 
     /**
      * Create a new product. If successful, redirect to the products page.
-     * @param Request $request: the request containing the attributes of the product to be created. Injected by Laravel.
+     * @param Request $request: the request containing the attributes of the product to be created. Injected by Laravel's service container.
      */
     public function create(Request $request)
     {
@@ -89,7 +90,7 @@ class ProductController extends Controller
 
     /**
      * Update a product. If successful, redirect to the updated product page.
-     * @param Request $request: the request containing the attributes to be updated. Injected by Laravel.
+     * @param Request $request: the request containing the attributes to be updated. Injected by Laravel's service container.
      */
     public function update(Request $request)
     {
@@ -113,6 +114,20 @@ class ProductController extends Controller
         $numDeleted = $this->repository->delete($productId);
         if ($numDeleted == 0) abort(Response::HTTP_NOT_FOUND, 'The product to be removed was not found.');
         return redirect('/products')->setStatusCode(200);
+    }
+
+    /**
+     * Dispatch a global discount job.
+     * @param $percentage: the percentage to discount by. Can be any numeric value for flexibility.
+     */
+    public function dispatchGlobalDiscount(Request $request)
+    {
+        $percentage = $request->input('percentage');
+        if ($percentage === null || $percentage != (float) $percentage) {
+            abort(Response::HTTP_BAD_REQUEST, 'The discount multiplier must be present and numeric.');
+        }
+        DiscountAll::dispatch($this->repository, $percentage);
+        return redirect('/products')->setStatusCode(201);
     }
 
     /**

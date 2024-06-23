@@ -37,4 +37,9 @@ interface ProductRepositoryInterface
      * @return: number of products deleted. Either 0 or 1.
      */
     public function delete(int $productId): int;
+
+    /**
+     * @return: whether the update was successful.
+     */
+    public function multiplyAllPricesBy(float $multiplier): bool;
 }

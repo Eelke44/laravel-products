@@ -10,19 +10,28 @@
 <body>
     <span>Welcome {{ $user->name }}.</span>
 
-    @if($products)
+    @if(isset($products) && $products)
         <h2>Available products:</h2>
-        <div>
-            <ul>
-                @foreach($products as $product)
-                    <li><a href="{{ url('products/' . $product->id) }}">{{ $product->name }}</a></li>
-                @endforeach
-            </ul>
-        </div>
+        <ul>
+            @foreach($products as $product)
+                <li><a href="{{ url('products/' . $product->id) }}">{{ $product->name }}</a></li>
+            @endforeach
+        </ul>
     @else
         <h2>There are no products at this time.</h2>
     @endif
 
     <a href="{{ url('products/create') }}">Create a product</a>
+
+    <br/><br/>
+
+    <h2>Dispatch a discount job?</h2>
+
+    <form id="form-discount" action="{{ url('products/discount') }}" method="POST">
+        @csrf {{-- Cross-Site Request Forgery protection. --}}
+        Discount: <input id="input-discount-percentage" name="percentage" type="number" value="0">%
+
+        <button type="submit">Dispatch</button>
+    </form>
 </body>
 </html>

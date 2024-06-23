@@ -51,5 +51,9 @@ class PlainSqlProductRepository implements ProductRepositoryInterface
         return DB::delete('delete from products where id = ?', [$productId]);
     }
 
-
+    /** @inheritDoc */
+    public function multiplyAllPricesBy(float $multiplier): bool
+    {
+        return (bool) DB::update('update products set price = price * ?', [$multiplier]);
+    }
 }
