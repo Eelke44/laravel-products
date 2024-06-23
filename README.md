@@ -58,3 +58,5 @@ To start a local development server at the default port 8000, run:
 ```bash
 php artisan serve
 ```
+
+NOTE: if there is no `.env` file at the project root, creating one with the contents of `.env.example` works for local development.
