@@ -8,6 +8,21 @@
     <title>Products</title>
 </head>
 <body>
-    Welcome {{ $user->name }}
+    <span>Welcome {{ $user->name }}.</span>
+
+    @if($products)
+        <h2>Available products:</h2>
+        <div>
+            <ul>
+                @foreach($products as $product)
+                    <li><a href="{{ url('products/' . $product->id) }}">{{ $product->name }}</a></li>
+                @endforeach
+            </ul>
+        </div>
+    @else
+        <h2>There are no products at this time.</h2>
+    @endif
+
+    <a href="{{ url('products/create') }}">Create a product</a>
 </body>
 </html>
