@@ -42,7 +42,7 @@ class ProductController extends Controller
         }
         $success = $this->repository->create($attributes);
         if (!$success) abort(500);
-        return redirect('/products');
+        return redirect('/products')->setStatusCode(201);
     }
 
     /**
