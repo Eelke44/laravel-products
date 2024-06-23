@@ -35,6 +35,22 @@ Please find installation instructions [here](https://getcomposer.org/download/).
 
 Composer can be used to install Laravel. For this project, Laravel v11.1.1 was used.
 
+## Database setup
+
+Create the database and tables:
+
+```bash
+php artisan migrate
+```
+
+Seed the database:
+
+```bash
+php artisan db:seed
+```
+
+This creates a default user with email `admin@admin.com` and password `admin` and some default products.
+
 ## Running
 
 To start a local development server at the default port 8000, run:
