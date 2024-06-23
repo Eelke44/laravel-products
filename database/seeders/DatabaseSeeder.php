@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $seeders = [
             new UserSeeder(),
+            new ProductSeeder(),
         ];
 
         foreach ($seeders as $seeder) {

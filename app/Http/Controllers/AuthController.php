@@ -39,7 +39,7 @@ class AuthController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    private function validateLoginSyntax(Request $request): void
+    private function validateLoginSyntax(Request $request)
     {
         validator($request->all(), [
             'email' => ['required', 'email'],
