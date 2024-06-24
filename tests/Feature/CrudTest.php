@@ -109,7 +109,6 @@ class CrudTest extends TestCase
         $response = $this->authenticated()->get('/products/-1/update');
         $response->assertStatus(Response::HTTP_NOT_FOUND);
         $response = $this->authenticated()->get('/products/invalid/update');
-        error_log($response->getStatusCode());
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 
