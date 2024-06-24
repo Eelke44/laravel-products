@@ -63,7 +63,7 @@ NOTE: if there is no `.env` file at the project root, creating one with the cont
 
 ## Testing
 
-Testing requires a testing environment configuration to exist. Creating a `env.testing` file with the contents of `.env.testing.example` works.
+Testing requires a testing environment configuration to exist at the project root. Creating an `env.testing` file with the contents of `.env.testing.example` works.
 
 To create the testing database, run:
 
