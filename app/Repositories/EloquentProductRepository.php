@@ -35,7 +35,9 @@ class EloquentProductRepository implements ProductRepositoryInterface
         $id = $attributes['id'];
         if ($id === null) return false;
         $attributes['updated_at'] = now();
-        return Product::find($id)->update($attributes);
+        $product = Product::find($id);
+        if ($product === null) return false;
+        return $product->update($attributes);
     }
 
     /** @inheritDoc */
