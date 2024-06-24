@@ -14,7 +14,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
     /** @inheritDoc */
     public function create($attributes): bool
     {
-        return Product::create($attributes) ? true : false;
+        return (bool) Product::create($attributes);
     }
 
     /** @inheritDoc */
