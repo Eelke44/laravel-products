@@ -1,27 +1,32 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Create a product</title>
-</head>
-<body>
-    <h2>Create a product</h2>
-    <form action="{{ url('products') }}" method="POST">
-        @csrf           {{-- Cross-Site Request Forgery protection. --}}
+<x-layout>
+    <x-slot:title>Create a product</x-slot:title>
 
-        Name: <input id="input-name" name="name" type="text" placeholder="Name" required>
-        <br/><br/>
+    <div class="w3-container w3-card w3-padding">
+        <form action="{{ url('products') }}" method="POST">
+            @csrf           {{-- Cross-Site Request Forgery protection. --}}
+            
+            <div class="w3-container w3-padding">
+                <h2>Create a product</h2>
+                
+                <div class="w3-row w3-padding w3-margin">
+                    Name: <input id="input-name" name="name" type="text" placeholder="Name" required></input>
+                </div>
 
-        Description: <textarea id="input-decription" name="description" placeholder="Description" required></textarea>
-        <br/><br/>
-        
-        Price: €<input id="input-price" name="price" type="number" step="0.01" min="0" placeholder="0.00" required>
-        <br/><br/>
+                <div class="w3-row w3-padding w3-margin">
+                    Price: €<input id="input-price" name="price" type="number" step="0.01" min="0" placeholder="0.00" required></input>
+                </div>
 
-        <button type="submit">Create</button> <a href="{{ url('products') }}">Cancel</a>
-    </form>
-</body>
-</html>
+                <div class="w3-container w3-row w3-padding w3-margin">
+                    <div class="w3-column">
+                        Description:
+                    </div>
+                    <textarea id="input-decription" class="w3-column" style="width: -webkit-fill-available;" name="description" placeholder="Description" required></textarea>
+                </div>
+            </div>
+    
+            <div class="w3-container w3-padding">
+                <button class="w3-button" type="submit">Create</button> <a class="w3-button" href="{{ url('products') }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</x-layout>
