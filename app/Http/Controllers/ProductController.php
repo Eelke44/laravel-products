@@ -51,7 +51,6 @@ class ProductController extends Controller
     public function showProductsPage()
     {
         return view('products', [
-            'user' => auth()->user(),
             'products' => $this->repository->retrieveAll(),
         ]);
     }
