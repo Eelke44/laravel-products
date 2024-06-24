@@ -22,7 +22,7 @@ class ProductController extends Controller
     /**
      * Create a new controller instance. The repository is injected by Laravel's service container.
      */
-    public function __construct(PlainSqlProductRepository $repository)
+    public function __construct(ProductRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
