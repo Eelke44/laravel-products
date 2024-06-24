@@ -29,7 +29,7 @@
 
     <form id="form-discount" action="{{ url('products/discount') }}" method="POST">
         @csrf {{-- Cross-Site Request Forgery protection. --}}
-        Discount: <input id="input-discount-percentage" name="percentage" type="number" value="0">%
+        Discount: <input id="input-discount-percentage" name="percentage" type="number" step="any" value="0">%
 
         <button type="submit">Dispatch</button>
     </form>
