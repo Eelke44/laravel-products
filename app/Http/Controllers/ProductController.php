@@ -117,7 +117,7 @@ class ProductController extends Controller
 
     /**
      * Dispatch a global discount job.
-     * @param $percentage: the percentage to discount by. Can be any numeric value for flexibility.
+     * @param $request: the request containing the discount percentage. Injected by Laravel's service container.
      */
     public function dispatchGlobalDiscount(Request $request)
     {
