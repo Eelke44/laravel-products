@@ -8,7 +8,7 @@
                 <h2>Update {{ $product->name }}</h2>
                 
                 <div class="w3-row w3-padding w3-margin">
-                    Name: <input id="input-name" name="name" type="text" value={{ $product->name }} required></input>
+                    Name: <input id="input-name" name="name" type="text" value="{{ $product->name }}" required></input>
                 </div>
 
                 <div class="w3-row w3-padding w3-margin">
