@@ -35,6 +35,6 @@ class DiscountAll implements ShouldQueue
      */
     public function handle(): void
     {
-        $success = $this->repository->multiplyAllPricesBy(1 - 0.01*$this->percentage);
+        $this->repository->multiplyAllPricesBy(max(0, 1 - 0.01*$this->percentage));
     }
 }
